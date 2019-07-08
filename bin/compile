@@ -624,9 +624,8 @@ unset COMPOSER_GITHUB_OAUTH_TOKEN
 # install dependencies unless composer.json is completely empty (in which case it'd talk to packagist.org which may be slow and is unnecessary)
 export_env_dir "$env_dir" '^[A-Z_][A-Z0-9_]*$' '^(HOME|PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH|LD_LIBRARY_PATH|STACK|REQUEST_ID|IFS|HEROKU_PHP_INSTALL_DEV|BPLOG_PREFIX|BUILDPACK_LOG_FILE)$'
 if cat "$COMPOSER" | python -c 'import sys,json; sys.exit(not json.load(sys.stdin));'; then
-	composer --version
 	install_log=$(mktemp -t heroku-buildpack-php-composer-install-log-XXXX)
-	php -d memory_limit=512M $build_dir/composer install ${HEROKU_PHP_INSTALL_DEV-"--no-dev"} --prefer-dist --optimize-autoloader --no-interaction 2>&1 | tee "$install_log" | indent || {
+	php -d memory_limit=512M | composer install ${HEROKU_PHP_INSTALL_DEV-"--no-dev"} --prefer-dist --optimize-autoloader --no-interaction 2>&1 | tee "$install_log" | indent || {
 		code=$?
 		if [[ $code -eq 2 ]]; then
 			# dependency solving failed, which should only ever happen if people have platform overrides in their config
