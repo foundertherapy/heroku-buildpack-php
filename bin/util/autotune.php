@@ -71,6 +71,8 @@ if(isset($limits['php_admin_value'])) {
 	ini_set('memory_limit', $limits['php_value']);
 }
 
+ini_set('memory_limit', 512);
+
 $limit = ini_get('memory_limit');
 $ram = stringtobytes($argv[$argc-1]); // last arg is the available memory
 
